@@ -140,10 +140,8 @@ def main():
             .text.split(" ")[1]
         )
         boat_obj = Boat(boat_name.split(" ")[0], boat_name, boat_year, boat_length)
-        print(boat_obj)
-        boats.append(boat_obj)
-    print("==============moving to boat details page===================")
-    for div in boat_divs:
+
+        print("==============moving to boat details page===================")
         div.child("tag:a").click()
         print(driver.latest_tab)
         print(driver.tabs_count)
@@ -163,21 +161,24 @@ def main():
             .child("tag:div", index=2)
             .ele(".boat-calendar")
             .ele(".available-prices")
-            .ele("tag:button",index=2)
+            .ele("tag:button", index=2)
         )
         btn_trigger = 4
-        for index,slot in enumerate(availability_slots):
+        for index, slot in enumerate(availability_slots):
             start_date = slot.ele("tag:p").text
             end_date = slot.ele("tag:p", index=2).text
             availability = slot.ele("tag:p", index=3).text
             price = None
-            if availability.lower() == 'available':
-                price = slot.ele('tag:p', index=4).text
-            print(start_date, end_date, availability, price)
+            if availability.lower() == "available":
+                price = slot.ele("tag:p", index=4).text
             if index == btn_trigger:
                 next_btn.click()
-                btn_trigger +=2
-                sleep_func(3,DEBUG_MODE)
+                btn_trigger += 2
+                sleep_func(3, DEBUG_MODE)
+            boat_obj.add_schedule(start_date, end_date, availability, price)
+        details_tab.close()
+        print(boat_obj)
+        boats.append(boat_obj)
 
     # Print the HTML source code
     print("ran successfully.")
