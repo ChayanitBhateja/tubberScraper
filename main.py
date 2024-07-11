@@ -8,7 +8,7 @@ BOAT_TYPE = "Sailing Yacht"
 BRANDS = ["Dufour", "Beneteau", "Jeanneau"]
 
 
-def sleep_func(value, debug_mode=DEBUG_MODE):
+def sleep_func(value, debug_mode=True):
     if debug_mode:
         for i in range(value):
             time.sleep(1)
@@ -113,7 +113,7 @@ def main():
     # Clicking on the first boat...
     boat_divs = (
         driver.ele(".page__container")
-        .child('tag:div',index=2)
+        .child("tag:div", index=2)
         .child("tag:div", index=3)
         .child("tag:div")
         .child("tag:div", index=3)
@@ -121,8 +121,9 @@ def main():
         .children("tag:div")
     )
     print(boat_divs)
-    for div in boat_divs:      
-        details_div = div.child("tag:a").child(".boat-body")  
+    boats = []
+    for div in boat_divs:
+        details_div = div.child("tag:a").child(".boat-body")
         boat_name = details_div.child("tag:div", index=1).ele("tag:span").text
         boat_length = (
             details_div.child("tag:div", index=2)
@@ -131,9 +132,52 @@ def main():
             .ele("tag:span")
             .text
         )
-        boat_year = details_div.child('tag:div', index=2).ele('tag:ul').ele('tag:li', index=3).ele('tag:div').text.split(' ')[1]
-        boat_obj = Boat(boat_name.split(' ')[0], boat_name, boat_year, boat_length)
+        boat_year = (
+            details_div.child("tag:div", index=2)
+            .ele("tag:ul")
+            .ele("tag:li", index=3)
+            .ele("tag:div")
+            .text.split(" ")[1]
+        )
+        boat_obj = Boat(boat_name.split(" ")[0], boat_name, boat_year, boat_length)
         print(boat_obj)
+        boats.append(boat_obj)
+    print("==============moving to boat details page===================")
+    for div in boat_divs:
+        div.child("tag:a").click()
+        print(driver.latest_tab)
+        print(driver.tabs_count)
+        print(driver.tab_ids)
+        details_tab = driver.get_tab(driver.tab_ids[0])
+        sleep_func(10, DEBUG_MODE)
+        availability_slots = (
+            details_tab.ele(".page__container")
+            .child("tag:div", index=2)
+            .ele(".boat-calendar")
+            .ele(".available-prices")
+            .ele(".prices-list")
+            .children("tag:div")
+        )
+        next_btn = (
+            details_tab.ele(".page__container")
+            .child("tag:div", index=2)
+            .ele(".boat-calendar")
+            .ele(".available-prices")
+            .ele("tag:button",index=2)
+        )
+        btn_trigger = 4
+        for index,slot in enumerate(availability_slots):
+            start_date = slot.ele("tag:p").text
+            end_date = slot.ele("tag:p", index=2).text
+            availability = slot.ele("tag:p", index=3).text
+            price = None
+            if availability.lower() == 'available':
+                price = slot.ele('tag:p', index=4).text
+            print(start_date, end_date, availability, price)
+            if index == btn_trigger:
+                next_btn.click()
+                btn_trigger +=2
+                sleep_func(3,DEBUG_MODE)
 
     # Print the HTML source code
     print("ran successfully.")

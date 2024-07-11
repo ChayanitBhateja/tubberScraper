@@ -9,10 +9,11 @@ class Boat:
         self.length = length
         self.schedule = []  # Initialize an empty list for schedule
 
-    def add_schedule(self, from_date, to_date, price):
+    def add_schedule(self, from_date, to_date, availability, price):
         self.schedule.append({
             "from_date": from_date,
             "to_date": to_date,
+            "availability": availability,
             "price": price
         })
 
