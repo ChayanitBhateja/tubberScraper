@@ -19,9 +19,9 @@ class Boat:
     def __str__(self):
         return f"Boat ID: {self.id}\nBrand: {self.brand_name}\nName: {self.name}\nYear: {self.year}\nLength: {self.length}\nSchedule: {self.schedule}"
 
-# Example usage:
-boat1 = Boat("Dufour", "Sailing Yacht 35", 2020, 35)
-boat1.add_schedule("2023-10-20", "2023-10-27", 1500)
-boat1.add_schedule("2023-11-03", "2023-11-10", 1200)
+# # Example usage:
+# boat1 = Boat("Dufour", "Sailing Yacht 35", 2020, 35)
+# boat1.add_schedule("2023-10-20", "2023-10-27", 1500)
+# boat1.add_schedule("2023-11-03", "2023-11-10", 1200)
 
-print(boat1)
+# print(boat1)
