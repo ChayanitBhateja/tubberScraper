@@ -1,6 +1,7 @@
 from DrissionPage import ChromiumPage, ChromiumOptions
 import time
 from boat import Boat
+from scrapingException import ScrapingException
 
 DEBUG_MODE = True
 DESTINATION = "Oosterschelde"
@@ -30,13 +31,17 @@ def main():
     # Wait for 5 seconds for the page to load
     sleep_func(5, DEBUG_MODE)
     # Finding the main div where the Cloudflare IFrame is located...
-    sr_parent_div = driver.ele(".cf-turnstile-wrapper")
-    # Finding the Shadow-root element under which the iframe object is located...
-    sr_child_div = sr_parent_div.sr("tag:iframe")
+    if driver.ele(".cf-turnstile-wrapper"):
+        sr_parent_div = driver.ele(".cf-turnstile-wrapper")
+        # Finding the Shadow-root element under which the iframe object is located...
+        sr_child_div = sr_parent_div.sr("tag:iframe")
 
-    # 10 seconds wait to avoid cloudflare security...
-    sleep_func(10, DEBUG_MODE)
-    sr_child_div.ele("tag:input").click()
+        # 10 seconds wait to avoid cloudflare security...
+        sleep_func(10, DEBUG_MODE)
+        # Update: cloudflare has a #document element under iFrame so we need to identify the input tag in it...
+        iframe_sr_parent = sr_child_div.ele("tag:body")
+        iframe_sr_child = iframe_sr_parent.sr("tag:input")
+        iframe_sr_child.click()
     print("=====================Reaching Homepage====================")
     # Waiting for homepage to load...
     sleep_func(10, DEBUG_MODE)
@@ -103,11 +108,26 @@ def main():
         .ele("tag:ul")
     )
     # Finding brand name in filters and ticking it...
+    brand_counter = 0
     for item in filter_section.children():
         if item.ele(".filters-filter__title").text == "Brand":
             for label in item.eles("tag:label"):
                 if label.child("tag:span").text in BRANDS:
                     label.child("tag:input").click()
+                    brand_counter += 1
+            if brand_counter > 1:
+                print(
+                    "Filter for "
+                    + brand_counter
+                    + " out of "
+                    + len(BRANDS)
+                    + " are applied"
+                )
+            else:
+                raise ScrapingException("None of the targeting brands are available")
+        else:
+            print("Brand filter not found..")
+            raise ScrapingException("No boat available at this moment")
     # Waiting for filters to apply...
     sleep_func(5, DEBUG_MODE)
     # Clicking on the first boat...
@@ -182,7 +202,7 @@ def main():
 
     # Print the HTML source code
     print("ran successfully.")
-    # driver.quit()
+    if not DEBUG_MODE: driver.quit()
 
 
 if __name__ == "__main__":
