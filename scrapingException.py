@@ -2,4 +2,4 @@
 class ScrapingException(Exception):
     def __init__(self, message):
         super().__init__(message)
-        print(f"Scraping Error: {message}")
+        # print(f"Scraping Error: {message}")

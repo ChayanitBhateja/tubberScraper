@@ -20,6 +20,22 @@ class Boat:
     def __str__(self):
         return f"Boat ID: {self.id}\nBrand: {self.brand_name}\nName: {self.name}\nYear: {self.year}\nLength: {self.length}\nSchedule: {self.schedule}"
 
+
+    def __dict__(self):
+        """
+        Returns a dictionary representation of the Boat object.
+        This is used for JSON serialization.
+        """
+        return {
+            "id": self.id,
+            "brand_name": self.brand_name,
+            "name": self.name,
+            "year": self.year,
+            "length": self.length,
+            "schedule": self.schedule,
+        }
+
+
 # # Example usage:
 # boat1 = Boat("Dufour", "Sailing Yacht 35", 2020, 35)
 # boat1.add_schedule("2023-10-20", "2023-10-27", 1500)
