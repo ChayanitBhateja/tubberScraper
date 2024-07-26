@@ -6,12 +6,9 @@ from boat import Boat
 from scrapingException import ScrapingException
 
 DEBUG_MODE = True
-# DESTINATION = "Oosterschelde"
-DESTINATION = "Yerseke"
-# BOAT_TYPE = "Sailing Yacht"
-BOAT_TYPE = "Motorboat"
-# BRANDS = ["Dufour", "Beneteau", "Jeanneau"]
-BRANDS = ["Bavaria"]
+DESTINATION = "Oosterschelde" if DEBUG_MODE else "Yerseke"
+BOAT_TYPE = "Sailing Yacht" if DEBUG_MODE else "Motorboat"
+BRANDS = ["Dufour", "Beneteau", "Jeanneau"] if DEBUG_MODE else ["Bavaria"]
 
 
 def sleep_func(value, debug_mode=True):
