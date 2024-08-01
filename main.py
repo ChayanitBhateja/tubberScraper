@@ -6,9 +6,9 @@ from boat import Boat
 from scrapingException import ScrapingException
 
 DEBUG_MODE = True
-DESTINATION = "Oosterschelde" if DEBUG_MODE else "Yerseke"
-BOAT_TYPE = "Sailing Yacht" if DEBUG_MODE else "Motorboat"
-BRANDS = ["Dufour", "Beneteau", "Jeanneau"] if DEBUG_MODE else ["Bavaria"]
+DESTINATION = "Yerseke" if DEBUG_MODE else "Oosterschelde"
+BOAT_TYPE = "Motorboat" if DEBUG_MODE else "Sailing Yacht"
+BRANDS = ["Bavaria"] if DEBUG_MODE else ["Dufour", "Beneteau", "Jeanneau"]
 
 
 def sleep_func(value, debug_mode=True):
@@ -227,7 +227,7 @@ def main():
             print(boat_obj)
             boats.append(boat_obj)
         with open(
-            "./scraped_jsons/data_" + str(datetime.now().timestamp()) + ".json", "w"
+            "./scraped_jsons/data_" + str(datetime.now().date()) + ".json", "w"
         ) as file:
             json.dump([boat.__dict__() for boat in boats], file)
         print("ran successfully.")
